@@ -1,4 +1,12 @@
-import React, { useState, useEffect, forwardRef, useRef, useCallback, CSSProperties } from 'react';
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  useRef,
+  useCallback,
+  CSSProperties,
+  HTMLAttributes,
+} from 'react';
 import classnames from 'classnames';
 import { canUseDOM } from '../utils/dom';
 import { AffixProps as BaseAffixProps } from './interface';
@@ -12,10 +20,9 @@ export interface AffixStates {
   height: number;
 }
 
-export interface AffixProps extends BaseAffixProps {
+export interface AffixProps extends BaseAffixProps, Omit<HTMLAttributes<HTMLElement>, 'onChange'> {
   prefixCls?: string;
   className?: string;
-  children?: React.ReactNode;
 }
 
 const DEFAULT_SCROLL_CONTAINER = canUseDOM ? window : undefined;
@@ -130,7 +137,7 @@ const Affix = forwardRef<unknown, AffixProps>((props, ref) => {
 
   useEffect(() => {
     // wait for ref not null
-    setTimeout(() => {
+    window.setTimeout(() => {
       Events.on(getContainer(), 'scroll', onPositionUpdate);
       if (offsetBottom != null) {
         onPositionUpdate();
@@ -138,7 +145,7 @@ const Affix = forwardRef<unknown, AffixProps>((props, ref) => {
     });
 
     return () => {
-      setTimeout(() => {
+      window.setTimeout(() => {
         const container = getContainer();
         Events.off(container, 'scroll', onPositionUpdate);
       });
